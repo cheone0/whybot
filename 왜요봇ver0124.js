@@ -109,7 +109,68 @@ function response(room, msg, sender, isGroupChat, replier) {
       replier.reply("숫자 다시 입력해봐.");
     }
   }
+  if (Data[0] == "!곤란랭킹") {
+    if (Data[1] == "1") {
+      try {
+        var rankList = [];
+        var mapleG = org.jsoup.Jsoup.connect(
+          "https://maplestory.nexon.com/Common/Guild?gid=14512&wid=50"
+        )
+          .get()
+          .select("div.guild_user_list")
+          .select("tbody");
+        var muname = mapleG.select("tr").get(0).select("a").text();
+        var muLv = mapleG.select("tr").get(0).select("td").get(2).text();
+        for (i = 0; i < 20; i++) {
+          var muname = mapleG.select("tr").get(i).select("a").text();
+          var muLv = mapleG.select("tr").get(i).select("td").get(2).text();
+          rankList[i] = i + 1 + "위: [" + muname + "] " + muLv + "\n";
+        }
+        replier.reply(rankList.join(""));
+      } catch (e) {
+        replier.reply("에러");
+      }
+    }
 
+    if (Data[1] == "2") {
+      try {
+        var rankList = [];
+        var mapleG = org.jsoup.Jsoup.connect(
+          "https://maplestory.nexon.com/Common/Guild?gid=14512&wid=50&orderby=0&page=2"
+        )
+          .get()
+          .select("div.guild_user_list")
+          .select("tbody");
+        for (i = 0; i < 20; i++) {
+          var muname = mapleG.select("tr").get(i).select("a").text();
+          var muLv = mapleG.select("tr").get(i).select("td").get(2).text();
+          rankList[i] = i + 21 + "위: [" + muname + "] " + muLv + "\n";
+        }
+        replier.reply(rankList.join(""));
+      } catch (e) {
+        replier.reply("에러");
+      }
+    }
+    if (Data[1] == "3") {
+      try {
+        var rankList = [];
+        var mapleG = org.jsoup.Jsoup.connect(
+          "https://maplestory.nexon.com/Common/Guild?gid=14512&wid=50&orderby=0&page=3"
+        )
+          .get()
+          .select("div.guild_user_list")
+          .select("tbody");
+        for (i = 0; i < 20; i++) {
+          var muname = mapleG.select("tr").get(i).select("a").text();
+          var muLv = mapleG.select("tr").get(i).select("td").get(2).text();
+          rankList[i] = i + 41 + "위: [" + muname + "] " + muLv + "\n";
+        }
+        replier.reply(rankList.join(""));
+      } catch (e) {
+        replier.reply("에러");
+      }
+    }
+  }
   if (Data[0] == "!짱아랭킹") {
     if (Data[1] == "1") {
       try {
