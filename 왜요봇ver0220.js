@@ -209,6 +209,86 @@ function response(room, msg, sender, isGroupChat, replier) {
     }
   }
 
+  if (Data[0] == "!6차") {
+    try {
+      let answer = searchHexa(Data[1]);
+      let lastAnswer = "";
+      let skillcore = "";
+      let masterycore = "";
+      let gangcore = "";
+      let sharecore = "";
+      for (i = 0; i < answer.character_hexa_core_equipment.length; i++) {
+        if (
+          answer.character_hexa_core_equipment[i].hexa_core_type == "스킬 코어"
+        ) {
+          skillcore +=
+            answer.character_hexa_core_equipment[i].hexa_core_name +
+            " : " +
+            answer.character_hexa_core_equipment[i].hexa_core_level +
+            "\n";
+        } else if (
+          answer.character_hexa_core_equipment[i].hexa_core_type == "강화 코어"
+        ) {
+          gangcore +=
+            answer.character_hexa_core_equipment[i].hexa_core_name +
+            " : " +
+            answer.character_hexa_core_equipment[i].hexa_core_level +
+            "\n";
+        } else if (
+          answer.character_hexa_core_equipment[i].hexa_core_type ==
+          "마스터리 코어"
+        ) {
+          masterycore +=
+            answer.character_hexa_core_equipment[i].hexa_core_name +
+            " : " +
+            answer.character_hexa_core_equipment[i].hexa_core_level +
+            "\n";
+        } else if (
+          answer.character_hexa_core_equipment[i].hexa_core_type == "공용 코어"
+        ) {
+          sharecore +=
+            answer.character_hexa_core_equipment[i].hexa_core_name +
+            " : " +
+            answer.character_hexa_core_equipment[i].hexa_core_level +
+            "\n";
+        }
+      }
+      replier.reply(
+        Data[1] +
+          "의 HEXA 코어 정보 조회\n\n" +
+          "[스킬 코어]\n" +
+          skillcore +
+          "\n[강화 코어]\n" +
+          gangcore +
+          "\n[마스터리 코어]\n" +
+          masterycore +
+          "\n[공용 코어]\n" +
+          sharecore.slice(0, -1)
+      );
+    } catch (e) {
+      replier.reply("6차 안 한듯..");
+    }
+  }
+
+  //캐릭터 헥사 출력
+  function searchHexa(chName) {
+    let ocid = searchOcid(chName);
+    let nowtime = changeDate(-1);
+    let val = org.jsoup.Jsoup.connect(
+      "https://open.api.nexon.com/maplestory/v1/character/hexamatrix?" + ocid
+    )
+      .header("x-nxopen-api-key", apiKey)
+      .data("ocid", ocid)
+      .data("date", nowtime)
+      .ignoreContentType(true)
+      .ignoreHttpErrors(true)
+      .get()
+      .text();
+
+    let ans = JSON.parse(val);
+    return ans;
+  }
+
   if (Data[0] == "!ㅇ") {
     var ment = [];
     var nowtime = nowDate();
@@ -270,10 +350,6 @@ function response(room, msg, sender, isGroupChat, replier) {
       let guild = pro.character_guild_name;
       let union = searchUnion(Data[1]).union_level;
       let power = searchStat(Data[1]).stat_value;
-
-      if (guild == null) {
-        guild = "-";
-      }
 
       replier.reply(
         "닉네임 : " +
@@ -771,14 +847,14 @@ function response(room, msg, sender, isGroupChat, replier) {
       "스테이크에 크림파스타",
       "수제버거",
       "말해줘도 안먹을거 다 알아",
-
-      "에그드랍",
+      "먹태",
+      "와플",
       "아메리카노",
       "케이크",
       "해물파전에 칼국수",
       "월남쌈",
       "호떡",
-      "냉모밀과 돈가스",
+      "친츄픽 냉모밀과 돈가스",
       "들기름막국수",
       "짜장밥",
       "참치절임덮밥",
@@ -798,7 +874,7 @@ function response(room, msg, sender, isGroupChat, replier) {
       "간장계란밥 ",
       "소고기볶음밥",
       "스팸볶음밥",
-
+      "해물볶음밥",
       "새우볶음밥",
       "카레덮밥",
       "짜장밥",
@@ -806,23 +882,32 @@ function response(room, msg, sender, isGroupChat, replier) {
       "오므라이스",
       "육회비빔밥",
       "김치알밥",
-      "아보카도연어덮밥",
+      "명란버터밥",
       "비빔밥",
-
+      "가지밥",
+      "전복밥",
+      "콩나물밥",
+      "곤드레비빔밥",
+      "표고버섯영양밥",
       "쌈밥",
       "미역국",
-
-      "설렁탕",
-
+      "무국",
+      "콩나물국",
+      "김치콩나물국",
+      "사골곰탕",
+      "북엇국",
+      "우거지국",
+      "시래기국",
       "뼈해장국",
-
+      "된장국",
+      "어묵탕",
       "육개장",
       "갈비탕",
       "삼계탕",
       "추어탕",
       "꽃게탕",
       "홍합탕",
-
+      "해물누룽지탕",
       "된장찌개",
       "차돌된장찌개",
       "꽃게된장찌개",
@@ -834,17 +919,18 @@ function response(room, msg, sender, isGroupChat, replier) {
       "비지찌개",
       "고추장찌개",
       "짜글이찌개",
-      "버섯불고기전골",
+      "버섯찌개",
       "소고기찌개",
       "밀폐유나베",
-
+      "소고기버섯전골",
       "불고기전골",
-
+      "어묵전골",
       "만두전골",
-
+      "두부전골",
+      "버섯전골",
       "곱창전골",
       "대창전골",
-
+      "아롱사태전골",
       "불낙전골",
       "삼겹살",
       "수육",
@@ -864,7 +950,8 @@ function response(room, msg, sender, isGroupChat, replier) {
       "닭볶음탕",
       "닭갈비",
       "훈제오리구이",
-
+      "단호박훈제오리찜",
+      "삼겹살숙주볶음",
       "차돌숙주볶음",
       "찜닭",
       "소세지야채볶음",
@@ -872,7 +959,7 @@ function response(room, msg, sender, isGroupChat, replier) {
       "떡갈비",
       "함박스테이크",
       "동그랑땡",
-
+      "편백나무찜",
       "곱창구이",
       "막창구이",
       "족발",
@@ -881,17 +968,19 @@ function response(room, msg, sender, isGroupChat, replier) {
       "생선까스",
       "연어스테이크",
       "오징어볶음",
-
+      "미나리오징어초무침",
       "쭈꾸미볶음",
       "아귀찜",
       "해물찜",
       "고등어구이",
       "고등어조림",
-
+      "코다리조림",
       "갈치구이",
       "갈치조림",
       "장어구이",
-
+      "조기구이",
+      "가자미구이",
+      "꽁치조림",
       "낙곱새",
       "바지락술찜",
       "바지락칼국수",
@@ -907,9 +996,9 @@ function response(room, msg, sender, isGroupChat, replier) {
       "골뱅이무침",
       "곱창볶음",
       "순대볶음",
-      "닭똥집볶음",
+      "닭볶집볶음",
       "닭발",
-
+      "오돌뼈",
       "월남쌈",
       "도토리묵무침",
       "쌈무말이",
@@ -918,13 +1007,21 @@ function response(room, msg, sender, isGroupChat, replier) {
       "계란말이",
       "부추계란볶음",
       "스크램블",
-      "스팸구이에 뜨신밥 ",
+      "스팸구이",
       "치킨너겟",
       "치킨텐더",
       "애호박전",
       "김치전",
       "부추전",
-
+      "두부전",
+      "오징어전",
+      "버섯야채전",
+      "배추전",
+      "동태전",
+      "꼬지전",
+      "소세지전",
+      "고추장떡",
+      "깻잎전",
       "베이컨팽이버섯말이",
       "맛살하트전",
       "참치마요",
@@ -953,9 +1050,13 @@ function response(room, msg, sender, isGroupChat, replier) {
       "우동",
       "핫도그",
       "찐만두",
-      "떡튀순",
-      "비빔만두에 김밥",
-
+      "튀김만두",
+      "비빔만두",
+      "김말이튀김",
+      "야채튀김",
+      "오징어튀김",
+      "가지튀김",
+      "팝콘치킨",
       "순대",
       "짜장면",
       "짬뽕",
@@ -964,18 +1065,24 @@ function response(room, msg, sender, isGroupChat, replier) {
       "꿔바로우",
       "마파두부",
       "계란토마토볶음밥",
-
+      "양장피",
       "깐풍기",
-
+      "깐풍새우",
+      "크림새우",
       "유린기",
-      "중화요리ㄱㄱ",
-
-      "파스타",
-
+      "팔보채",
+      "고추잡채",
+      "춘권",
+      "딤섬",
+      "토마토스파게티",
+      "크림파스타",
+      "명란파스타",
+      "봉골레파스타",
       "감바스",
       "스테이크",
-      "도미노피자",
-
+      "또띠아피자",
+      "고구마그라탕",
+      "감자그라탕",
       "피자",
       "함박스테이크",
       "리조또",
@@ -983,18 +1090,20 @@ function response(room, msg, sender, isGroupChat, replier) {
       "샐러드",
       "햄버거",
       "부리또",
-
-      "버거킹",
+      "해쉬브라운",
+      "감자튀김",
+      "맥앤치즈",
       "콘샐러드",
       "초밥",
       "라멘",
       "나가사키짬뽕",
-
+      "오니기리",
       "연어덮밥",
       "새우장덮밥",
       "메밀소바",
       "돈카츠",
-
+      "야키니쿠",
+      "낫또",
       "볶음우동",
       "카레우동",
       "가츠동",
@@ -1004,7 +1113,6 @@ function response(room, msg, sender, isGroupChat, replier) {
       "타코",
       "감자탕",
       "붕어빵 \n슈붕 웩 팥붕최고",
-      "나도 고민중",
     ];
     var menu = sValue[Math.floor(Math.random() * sValue.length)];
 
@@ -1030,6 +1138,13 @@ function response(room, msg, sender, isGroupChat, replier) {
         "A에서 B까지 필요한 솔 에르다와 조각의 갯수" +
         "\n" +
         "ex)!헥사 0 30" +
+        "\n" +
+        "\n" +
+        "!6차 (캐릭명)" +
+        "\n" +
+        "HEXA 매트릭스에 장착한 코어 정보를 조회합니다." +
+        "\n" +
+        "ex)!6차 아델" +
         "\n\n" +
         "!골라줘 A B C...." +
         "\n" +
